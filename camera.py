@@ -451,12 +451,15 @@ def WaitForEvent():
                         if event.key == pygame.K_DOWN:
                             NotEvent = False
                             return
+                    if event.type == pygame.FINGERDOWN:
+                        NotEvent = False
+                        return
             time.sleep(0.2)
 
 def main(threadName, *args):
     InitFolder()
     while True:
-            show_image('images/start_camera.jpg',True)
+            show_image(os.path.join('images', 'start_camera.jpg'),True)
             WaitForEvent()
             time.sleep(0.2)
             TakePictures()
