@@ -453,7 +453,9 @@ def WaitForEvent():
 def main(threadName, *args):
     InitFolder()
     while True:
-            show_image('images/start_camera.jpg')
+            start_img = pygame.image.load('images/start_camera.jpg')
+            start_img = pygame.transform.scale(start_img, (infoObject.current_w,infoObject.current_h)
+            show_image(start_img)
             WaitForEvent()
             time.sleep(0.2)
             TakePictures()
