@@ -244,9 +244,12 @@ def ShowPicture(file, delay):
     time.sleep(delay)
 
 # display one image on screen
-def show_image(image_path):
+def show_image(image_path, resize=False):
     screen.fill(pygame.Color("white")) # clear the screen
     img = pygame.image.load(image_path) # load the image
+    if resize:
+        img = pygame.transform.scale(img, (infoObject.current_w,infoObject.current_h))
+
     img = img.convert()
     set_dimensions(img.get_width(), img.get_height()) # set pixel dimensions based on image
     x = (infoObject.current_w / 2) - (img.get_width() / 2)
@@ -453,9 +456,7 @@ def WaitForEvent():
 def main(threadName, *args):
     InitFolder()
     while True:
-            start_img = pygame.image.load('images/start_camera.jpg')
-            start_img = pygame.transform.scale(start_img, (infoObject.current_w,infoObject.current_h))
-            show_image(start_img)
+            show_image('images/start_camera.jpg',True)
             WaitForEvent()
             time.sleep(0.2)
             TakePictures()
