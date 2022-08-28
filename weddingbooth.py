@@ -1,9 +1,9 @@
 import sys
 import time
 import PIL
-from PyQt6.QtWidgets import * 
-from PyQt6.QtGui import * 
-from PyQt6.QtCore import Qt, QTimer
+from PyQt5.QtWidgets import * 
+from PyQt5.QtGui import * 
+from PyQt5.QtCore import Qt, QTimer
 from threading import Thread
 
 countdown_length = 3
