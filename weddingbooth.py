@@ -185,9 +185,15 @@ class EmailScreen(QWidget):
         self.window = window
         self.email_input = QLineEdit(self)
         self.email_input.setGeometry(0,0,600,100)
-        self.email_input.editingFinished.connect(self.processEmail)
         self.setStyleSheet("background-color: white;")
         self.email_input.setFocus()
+        self.email_input.mousePressEvent()
+
+        self.send_button = QPushButton("Send", self)
+        self.send_button.setGeometry(610,0,190,100)
+        self.send_button.clicked.connect(self.processEmail)
+        QGuiApplication.inputMethod().show()
+
 
     def widgetSelected(self):
         pass
@@ -238,3 +244,11 @@ window = Window()
 # start the app
 
 sys.exit(app.exec())
+
+
+#Add email send button and connect that to send function instead of clicking off
+#See if possible to bring keyboard up automatically
+#Have camera take multiple photos, name them properly, and make sure they all get sent
+#Send user to new screen onces send is hit, start a loading screen before email process starts, have message that says to check your spam folder
+#Confirmation screen once photos are sent, then back to home page
+# "Flash" not properly working when camera takes photo
