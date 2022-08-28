@@ -3,7 +3,7 @@ import PIL
 import picamera
 from PyQt5.QtWidgets import * 
 from PyQt5.QtGui import * 
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import Qt, QObject, QTimer
 from threading import Thread
 
 os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
@@ -23,6 +23,8 @@ class Window(QMainWindow):
         
         # setup UI objects
         self.createStack()
+        QGuiApplication.inputMethod().visibleChanged.connect(self.keyboardMask)
+
 
         # show all the widgets (maximized)
         #self.showMaximized() #FLAG UNCOMMENT THIS LINE IN PROD
@@ -80,7 +82,17 @@ class Window(QMainWindow):
         #self.camera.image_effect          = 'none'
         #self.camera.color_effects         = None
         #self.camera.crop                  = (0.0, 0.0, 1.0, 1.0)
-
+    def keyboardMask(self):
+        if not QGuiApplication.inputMethod().isVisible():
+            return
+        for w in QGuiApplication.allWindows():
+            if w.metaObject().className() == "QtVirtualKeyboard::InputView":
+                keyboard = w.findChild(QObject, "keyboard")
+                if keyboard is not None:
+                    r = w.geometry()
+                    r.moveTop(keyboard.property("y"))
+                    w.setMask(QRegion(r))
+                    return
 #####################################################################
 ### Screens 
 #####################################################################
@@ -165,9 +177,10 @@ class EmailScreen(QWidget):
         super().__init__()
         self.window = window
         self.email_input = QLineEdit(self)
-        self.email_input.setGeometry(0,0,800,480)
+        self.email_input.setGeometry(0,0,600,100)
         self.email_input.editingFinished.connect(self.processEmail)
         self.setStyleSheet("background-color: white;")
+        self.email_input.setFocus()
 
     def widgetSelected(self):
         pass
