@@ -184,16 +184,23 @@ class EmailScreen(QWidget):
         super().__init__()
         self.window = window
 
+        self.desc_label = QLabel("Where should we send your photos?", self)
+        self.desc_label.setGeometry(0,0,800,50)
+        self.desc_label.setFont(QFont('Montserrat', 20))
+        self.desc_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
         self.email_label = QLabel("Email:", self)
-        self.email_label.setGeometry(0,0,100,100)
+        self.email_label.setGeometry(0,51,100,100)
+        self.email_label.setFont(QFont('Montserrat', 30))
+        self.email_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.email_input = QLineEdit(self)
-        self.email_input.setGeometry(100,0,500,100)
-        self.setStyleSheet("background-color: white;")
+        self.email_input.setGeometry(100,51,500,100)
+        self.email_input.setFont(QFont('Montserrat', 30))
         self.email_input.setFocus()
 
         self.send_button = QPushButton("Send", self)
-        self.send_button.setGeometry(610,0,190,100)
+        self.send_button.setGeometry(610,51,190,100)
         self.send_button.clicked.connect(self.processEmail)
         QGuiApplication.inputMethod().show()
 
