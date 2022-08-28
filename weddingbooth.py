@@ -1,6 +1,7 @@
 import sys
 import time
 import PIL
+import picamera
 from PyQt5.QtWidgets import * 
 from PyQt5.QtGui import * 
 from PyQt5.QtCore import Qt, QTimer
@@ -17,7 +18,7 @@ class Window(QMainWindow):
         # set the title
         self.setWindowTitle("Wedding Booth")
         # setting  the geometry of window (x,y position, width and height)
-        self.setGeometry(100, 100, 800, 480)
+        self.setGeometry(0, 100, 800, 480) #FLAG change to (0,0,800,480)
         
         # setup UI objects
         self.createStack()
@@ -26,6 +27,11 @@ class Window(QMainWindow):
         #self.showMaximized() #FLAG UNCOMMENT THIS LINE IN PROD
         self.changeScreen(0)
         self.show()
+
+
+#####################################################################
+### GUI & Cam Setup Functions 
+#####################################################################
 
     def createStack(self):
         self.Stack = QStackedWidget(self)
@@ -50,6 +56,33 @@ class Window(QMainWindow):
     def refreshSelected(self):
         if self.Stack.currentWidget():
             self.Stack.currentWidget().widgetSelected()
+
+    def setupCamera(self):
+        self.camera = picamera.PiCamera()
+        self.camera.resolution = self.camera.MAX_RESOLUTION
+        self.camera.rotation              = 0
+        self.camera.hflip                 = True
+        self.camera.vflip                 = False
+        self.camera.brightness            = 50
+        self.camera.preview_alpha = 120
+        self.camera.preview_fullscreen = True
+        #self.camera.framerate             = 24
+        #self.camera.sharpness             = 0
+        #self.camera.contrast              = 8
+        #self.camera.saturation            = 0
+        #self.camera.ISO                   = 0
+        #self.camera.video_stabilization   = False
+        #self.camera.exposure_compensation = 0
+        #self.camera.exposure_mode         = 'auto'
+        #self.camera.meter_mode            = 'average'
+        #self.camera.awb_mode              = 'auto'
+        #self.camera.image_effect          = 'none'
+        #self.camera.color_effects         = None
+        #self.camera.crop                  = (0.0, 0.0, 1.0, 1.0)
+
+#####################################################################
+### Screens 
+#####################################################################
 
 class HomeScreen(QWidget):
     def __init__(self, window=None):
@@ -77,7 +110,6 @@ class HomeScreen(QWidget):
         pass
 
 
-
 class CountdownScreen(QWidget):
     def __init__(self, window=None):
         super().__init__()
@@ -92,6 +124,7 @@ class CountdownScreen(QWidget):
         
     def widgetSelected(self):
         self.countdown_start()
+        self.window.setupCamera()
         
 
     def countdown_start(self):
@@ -108,6 +141,7 @@ class CountdownScreen(QWidget):
         elif self.seconds == 0:
             self.window.changeScreen(2)
 
+
 class BlankScreen(QWidget):
     def __init__(self, window=None):
         super().__init__()
@@ -117,8 +151,11 @@ class BlankScreen(QWidget):
         self.setStyleSheet("background-color: white;")
 
     def widgetSelected(self):
-        pass
+        self.window.camera.capture('WBphoto.jpg')
 
+#####################################################################
+### Run App
+#####################################################################
 
 # Initialize app
 app = QApplication(sys.argv)
