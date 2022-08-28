@@ -223,12 +223,12 @@ class EmailScreen(QWidget):
         self.recipient_email = self.email_input.text()
         image_paths = []
         image_paths.append('WBphoto.jpg')
-        print('step 1')
         self.sendEmail(self.recipient_email, "Thank you so much for enjoying our special day with us, here are your photos!", image_paths)
 
 
     def sendEmail(self, recipient, message, images):
-        print('step 2')
+        self.send_button.setEnabled(False)
+        self.loading_label.setText("Sending, please wait...")
         try:
             with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
                 msg = MIMEMultipart()
@@ -236,8 +236,8 @@ class EmailScreen(QWidget):
                 msg['From']     = email_address
                 msg['To']       = recipient
                 body = MIMEText(message)
-                print('step 3')
                 msg.attach(body)
+                
                 for image in images:
                     with open(image,'rb') as f:
                         image_data = f.read()
@@ -246,27 +246,31 @@ class EmailScreen(QWidget):
                     print('step 5')
                     msg.attach(mi)
                     print('step 6')
-                print('step 7')
+                
                 smtp.ehlo()
                 smtp.starttls()
                 smtp.ehlo()
                 smtp.login(email_address,email_password)
                 smtp.sendmail(email_address, recipient,msg.as_string())
                 smtp.quit()
+        
         except Exception as e:
             print(e)
             print(recipient)
             self.loading_label.setText("Uh oh! We're having trouble connecting, your host will have your photos after the event.")
         
         else:
-            self.loading_label.setText("Email Sent! (Please check your spam folder if you don't receive it).")
+            
+            self.loading_label.setText("Email Sent! (Please check your spam folder if you don't receive it)")
             self.success_icon.setText('✓')
+        finally:
+            reset_timer = QTimer()
+            reset_timer.timeout.connect(self.flowComplete)
 
-class LoadingScreen(QWidget):
-    def __init__(self, window=None):
-        super().__init__()
-        self.window = window
-
+    def flowComplete(self):
+        self.loading_label.setText("")
+        self.success_icon.setText("")
+        self.window.changeScreen(0)
 
 #####################################################################
 ### Run App
