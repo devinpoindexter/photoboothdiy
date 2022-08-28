@@ -195,7 +195,7 @@ class EmailScreen(QWidget):
     def processEmail(self):
         self.recipient_email = self.email_input.text()
         image_paths = []
-        image_paths[0] = 'WBphoto.jpg'
+        image_paths.append('WBphoto.jpg')
         self.sendEmail(self.recipient_email, "Thank you so much for enjoying our special day with us, here are your photos!", image_paths)
 
 
