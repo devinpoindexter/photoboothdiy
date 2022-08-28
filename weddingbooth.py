@@ -263,14 +263,18 @@ class EmailScreen(QWidget):
             self.loading_label.setText("Email Sent! (Please check your spam folder if you don't receive it)")
             self.success_icon.setText('✓')
         finally:
-            reset_timer = QTimer()
-            reset_timer.timeout.connect(self.flowComplete)
-            reset_timer.start(1000)
+            print('starting timer')
+            self.reset_timer = QTimer()
+            self.reset_timer.timeout.connect(self.flowComplete)
+            self.reset_timer.start(1000)
+            print('running timer')
 
     def flowComplete(self):
+        print('finished timer')
         self.loading_label.setText("")
         self.success_icon.setText("")
         self.window.changeScreen(0)
+        print('screen should have changed')
 
 #####################################################################
 ### Run App
