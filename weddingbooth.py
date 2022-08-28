@@ -40,7 +40,7 @@ class Window(QMainWindow):
         self.stack1 = HomeScreen(window=self) #Home Screen (take photo + options)
         self.stack2 = CountdownScreen(window=self) #Countdown Screen
         self.stack3 = BlankScreen(window=self) #White screen
-        self.stack4 = QWidget() #Preview screen
+        self.stack4 = EmailScreen(window=self) #Preview screen
         self.stack5 = QWidget() #Enter email
 
         self.Stack.addWidget(self.stack1)
@@ -124,13 +124,14 @@ class CountdownScreen(QWidget):
         self.seconds = 3
         
     def widgetSelected(self):
-        self.countdown_start()
         self.window.setupCamera()
+        self.countdown_start()
+
         
 
     def countdown_start(self):
         self.countdown_label.setText(str(self.seconds))
-        self.countdown_timer.start(1500) #Add half second padding to give pi time to update screen
+        self.countdown_timer.start(1000) #Add half second padding to give pi time to update screen
 
 
     def countdown_end(self):
@@ -152,7 +153,28 @@ class BlankScreen(QWidget):
         self.setStyleSheet("background-color: white;")
 
     def widgetSelected(self):
-        self.window.camera.capture('WBphoto.jpg')
+        try:
+            self.window.camera.capture('WBphoto.jpg')
+        finally:
+            self.window.camera.close()
+            self.window.changeScreen(3)
+
+
+class EmailScreen(QWidget):
+    def __init__(self, window=None):
+        super().__init__()
+        self.window = window
+        self.email_input = QLineEdit(self)
+        self.email_input.setGeometry(0,0,800,480)
+        self.email_input.editingFinished.connect(self.processEmail)
+        self.setStyleSheet("background-color: white;")
+
+    def widgetSelected(self):
+        pass
+
+    def processEmail(self):
+        email = self.email_input.text()
+        print(email)
 
 #####################################################################
 ### Run App
