@@ -266,7 +266,7 @@ class EmailScreen(QWidget):
             print('starting timer')
             self.reset_timer = QTimer()
             self.reset_timer.timeout.connect(self.flowComplete)
-            self.reset_timer.start(1000)
+            self.reset_timer.start(4000)
             print('running timer')
 
     def flowComplete(self):
@@ -294,3 +294,4 @@ sys.exit(app.exec())
 #Send user to new screen onces send is hit, start a loading screen before email process starts, have message that says to check your spam folder
 #Confirmation screen once photos are sent, then back to home page
 # "Flash" not properly working when camera takes photo
+# Need to fix issue where camera cannot start on second loop, increased GPU allocation may have fixed this, but may also be related to closing the picam, when we potentially should keep open
