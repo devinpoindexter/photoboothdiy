@@ -215,14 +215,15 @@ class EmailScreen(QWidget):
                     image_data = f.read()
                     print('step 4')
                 mi = MIMEImage(image_data, name=os.path.basename(image))
+                print('step 5')
                 msg.attach(mi)
-    
+                print('step 6')
+            print('step 7')
             smtp.ehlo()
             smtp.starttls()
             smtp.ehlo()
             smtp.login(email_address,email_password)
-
-            smtp.sendmail(email_address, recipient, msg)
+            smtp.sendmail(email_address, recipient,msg.as_string())
             smtp.quit()
 
 #####################################################################
