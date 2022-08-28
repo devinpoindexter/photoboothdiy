@@ -191,13 +191,24 @@ class EmailScreen(QWidget):
 
         self.email_label = QLabel("Email:", self)
         self.email_label.setGeometry(0,51,100,100)
-        self.email_label.setFont(QFont('Montserrat', 30))
+        self.email_label.setFont(QFont('Montserrat', 25))
         self.email_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.email_input = QLineEdit(self)
         self.email_input.setGeometry(100,51,500,100)
         self.email_input.setFont(QFont('Montserrat', 30))
         self.email_input.setFocus()
+
+        self.loading_label = QLabel("", self)
+        self.loading_label.setGeometry(0,150,800,100)
+        self.loading_label.setFont(QFont('Montserrat', 15))
+        self.loading_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.success_icon = QLabel("", self)
+        self.success_icon.setGeometry(0,250,800,100)
+        self.success_icon.setFont(QFont('Montserrat', 50))
+        self.success_icon.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.success_icon.setStyleSheet("color: green")
 
         self.send_button = QPushButton("Send", self)
         self.send_button.setGeometry(610,51,190,100)
@@ -241,6 +252,14 @@ class EmailScreen(QWidget):
             smtp.login(email_address,email_password)
             smtp.sendmail(email_address, recipient,msg.as_string())
             smtp.quit()
+        self.loading_label.setText("Email Sent! (Please check your spam folder if you don't receive it).")
+        self.success_icon.setText('✓')
+
+class LoadingScreen(QWidget):
+    def __init__(self, window=None):
+        super().__init__()
+        self.window = window
+
 
 #####################################################################
 ### Run App
