@@ -196,20 +196,24 @@ class EmailScreen(QWidget):
         self.recipient_email = self.email_input.text()
         image_paths = []
         image_paths.append('WBphoto.jpg')
+        print('step 1')
         self.sendEmail(self.recipient_email, "Thank you so much for enjoying our special day with us, here are your photos!", image_paths)
 
 
     def sendEmail(self, recipient, message, images):
+        print('step 2')
         with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
             msg = MIMEMultipart()
             msg['Subject']  = email_subject
             msg['From']     = email_address
             msg['To']       = recipient
             body = MIMEText(message)
+            print('step 3')
             msg.attach(body)
             for image in images:
                 with open(image,'rb') as f:
                     image_data = f.read()
+                    print('step 4')
                 mi = MIMEImage(image_data, name=os.path.basename(image))
                 msg.attach(mi)
     
