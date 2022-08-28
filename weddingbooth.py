@@ -260,12 +260,12 @@ class EmailScreen(QWidget):
             self.loading_label.setText("Uh oh! We're having trouble connecting, your host will have your photos after the event.")
         
         else:
-            
             self.loading_label.setText("Email Sent! (Please check your spam folder if you don't receive it)")
             self.success_icon.setText('✓')
         finally:
             reset_timer = QTimer()
             reset_timer.timeout.connect(self.flowComplete)
+            reset_timer.start(1000)
 
     def flowComplete(self):
         self.loading_label.setText("")
