@@ -4,6 +4,7 @@ import PIL
 from PyQt5.QtWidgets import * 
 from PyQt5.QtGui import * 
 from PyQt5.QtCore import Qt, QTimer
+from threading import Thread
 
 countdown_length = 3
 
@@ -17,37 +18,85 @@ class Window(QMainWindow):
         self.setWindowTitle("Wedding Booth")
         # setting  the geometry of window (x,y position, width and height)
         self.setGeometry(100, 100, 800, 480)
+        
         # setup UI objects
-        self.UIComponents()
+        self.createStack()
+
         # show all the widgets (maximized)
         #self.showMaximized() #FLAG UNCOMMENT THIS LINE IN PROD
+        self.changeScreen(0)
         self.show()
-  
-    def UIComponents(self):
+
+    def createStack(self):
+        self.Stack = QStackedWidget(self)
+    
+        self.stack1 = HomeScreen(window=self) #Home Screen (take photo + options)
+        self.stack2 = CountdownScreen() #Countdown Screen
+        self.stack3 = QWidget() #White screen
+        self.stack4 = QWidget() #Preview screen
+        self.stack5 = QWidget() #Enter email
+
+        self.Stack.addWidget(self.stack1)
+        self.Stack.addWidget(self.stack2)
+        self.Stack.addWidget(self.stack3)
+        self.Stack.addWidget(self.stack4)
+        self.Stack.addWidget(self.stack5)
+        self.Stack.currentChanged.connect(self.refreshSelected)
+        self.setCentralWidget(self.Stack)
+        
+    def changeScreen(self,i):
+        self.Stack.setCurrentIndex(i)
+    
+    def refreshSelected(self):
+        if self.Stack.currentWidget():
+            self.Stack.currentWidget().widgetSelected()
+
+class HomeScreen(QWidget):
+    def __init__(self, window=None):
+        super().__init__()        
+        self.window = window     
         self.photo_button = QPushButton("", self)
-        self.photo_button.setGeometry(0,0,600,480)
-        self.photo_button.clicked.connect(self.photo_sequence)
-        # Need to figure out how to make button a gif, or put gif in background using QMovie
+        self.photo_button.setGeometry(0,0,700,480)
+        next_screen = lambda: self.window.changeScreen(1)
+        self.photo_button.clicked.connect(next_screen)
+        
+        #FLAG Need to figure out how to make button a gif, or put gif in background using QMovie
         self.photo_button.setStyleSheet("background-image: url(./assets/take_photo.png); border: none")
 
+    def widgetSelected(self):
+        pass
+
+    def flashUI(self):
+        pass
+
+    def previewUI(self):
+        pass
+
+    def emailUI(self):
+        pass
+
+
+
+class CountdownScreen(QWidget):
+    def __init__(self, window=None):
+        super().__init__()
+        self.window = window
+        self.countdown_label = QLabel("This is the countdown", self)
+        self.countdown_label.setGeometry(0,0,700,480)
+        
+    def widgetSelected(self):
+        self.countdown()
+
     def countdown(self, seconds=3):
-        self.countdown_label = QLabel(str(seconds))
+        self.countdown_label.setText(str(seconds))
         while seconds > 0:
             print(seconds) #FLAG remove this line in PROD
             self.countdown_label.setText(str(seconds))
             time.sleep(1)
             seconds -= 1
-
-
-
-
-
-    def photo_sequence(self):
+    def photo_sequence(self): #Stack2
         print("sequence started")
         self.countdown(countdown_length)
-    
-
-
 
 
 # Initialize app
