@@ -57,11 +57,12 @@ class HomeScreen(QWidget):
         self.window = window     
         self.photo_button = QPushButton("", self)
         self.photo_button.setGeometry(0,0,700,480)
+        #FLAG Need to figure out how to make button a gif, or put gif in background using QMovie
+        self.photo_button.setStyleSheet("background-image: url(./assets/take_photo.png); border: none")
         next_screen = lambda: self.window.changeScreen(1)
         self.photo_button.clicked.connect(next_screen)
         
-        #FLAG Need to figure out how to make button a gif, or put gif in background using QMovie
-        self.photo_button.setStyleSheet("background-image: url(./assets/take_photo.png); border: none")
+
 
     def widgetSelected(self):
         pass
