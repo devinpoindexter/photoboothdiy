@@ -1,11 +1,12 @@
-import sys
-import time
+import sys, os, time
 import PIL
 import picamera
 from PyQt5.QtWidgets import * 
 from PyQt5.QtGui import * 
 from PyQt5.QtCore import Qt, QTimer
 from threading import Thread
+
+os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
 
 countdown_length = 3
 
@@ -129,7 +130,7 @@ class CountdownScreen(QWidget):
 
     def countdown_start(self):
         self.countdown_label.setText(str(self.seconds))
-        self.countdown_timer.start(1000)
+        self.countdown_timer.start(1500) #Add half second padding to give pi time to update screen
 
 
     def countdown_end(self):
