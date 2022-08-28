@@ -1,29 +1,45 @@
-import sys, os, time
+import sys, os, time, configparser
 import PIL
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
 import picamera
 from PyQt5.QtWidgets import * 
 from PyQt5.QtGui import * 
 from PyQt5.QtCore import Qt, QObject, QTimer
 from threading import Thread
 
+#####################################################################
+### Defaults and globals
+#####################################################################
 os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
+
+config = configparser.ConfigParser()
+config.optionxform = str
+config.read('config.ini')
+email_address = str(config["DEFAULT"]["SENDER-GMAIL-ADDRESS"])
+email_password = str(config["DEFAULT"]["SENDER-GMAIL-PASSWORD"])
+email_subject = str(config["DEFAULT"]["EMAIL-SUBJECT"])
 
 countdown_length = 3
 
+
+#####################################################################
+#####################################################################
+### Main Window Setup
+#####################################################################
+#####################################################################
 class Window(QMainWindow):
     def __init__(self):
         super().__init__()
   
-        # this will hide the title bar
+        # UI customizations
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
-        # set the title
         self.setWindowTitle("Wedding Booth")
-        # setting  the geometry of window (x,y position, width and height)
         self.setGeometry(0, 100, 800, 480) #FLAG change to (0,0,800,480)
-        
-        # setup UI objects
         self.createStack()
-        QGuiApplication.inputMethod().visibleChanged.connect(self.keyboardMask)
+        QGuiApplication.inputMethod().visibleChanged.connect(self.keyboardMask) # make sure keyboard doesn't block app
 
 
         # show all the widgets (maximized)
@@ -82,7 +98,7 @@ class Window(QMainWindow):
         #self.camera.image_effect          = 'none'
         #self.camera.color_effects         = None
         #self.camera.crop                  = (0.0, 0.0, 1.0, 1.0)
-    def keyboardMask(self):
+    def keyboardMask(self): # without this function, the keyboard "blacks out" the top of the screen and user cannot see what they're typing
         if not QGuiApplication.inputMethod().isVisible():
             return
         for w in QGuiApplication.allWindows():
@@ -110,16 +126,7 @@ class HomeScreen(QWidget):
         
 
 
-    def widgetSelected(self):
-        pass
-
-    def flashUI(self):
-        pass
-
-    def previewUI(self):
-        pass
-
-    def emailUI(self):
+    def widgetSelected(self): #Called on each screen when that screen becomes active.
         pass
 
 
@@ -186,8 +193,33 @@ class EmailScreen(QWidget):
         pass
 
     def processEmail(self):
-        email = self.email_input.text()
-        print(email)
+        self.recipient_email = self.email_input.text()
+        image_paths = []
+        image_paths[0] = 'WBphoto.jpg'
+        self.sendEmail(self.recipient_email, "Thank you so much for enjoying our special day with us, here are your photos!", image_paths)
+
+
+    def sendEmail(self, recipient, message, images):
+        with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
+            msg = MIMEMultipart()
+            msg['Subject']  = email_subject
+            msg['From']     = email_address
+            msg['To']       = recipient
+            body = MIMEText(message)
+            msg.attach(body)
+            for image in images:
+                with open(image,'rb') as f:
+                    image_data = f.read()
+                mi = MIMEImage(image_data, name=os.path.basename(image))
+                msg.attach(mi)
+    
+            smtp.ehlo()
+            smtp.starttls()
+            smtp.ehlo()
+            smtp.login(email_address,email_password)
+
+            smtp.sendmail(email_address, recipient, msg)
+            smtp.quit()
 
 #####################################################################
 ### Run App
