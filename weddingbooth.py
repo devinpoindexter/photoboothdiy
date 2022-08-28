@@ -229,31 +229,38 @@ class EmailScreen(QWidget):
 
     def sendEmail(self, recipient, message, images):
         print('step 2')
-        with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
-            msg = MIMEMultipart()
-            msg['Subject']  = email_subject
-            msg['From']     = email_address
-            msg['To']       = recipient
-            body = MIMEText(message)
-            print('step 3')
-            msg.attach(body)
-            for image in images:
-                with open(image,'rb') as f:
-                    image_data = f.read()
-                    print('step 4')
-                mi = MIMEImage(image_data, name=os.path.basename(image))
-                print('step 5')
-                msg.attach(mi)
-                print('step 6')
-            print('step 7')
-            smtp.ehlo()
-            smtp.starttls()
-            smtp.ehlo()
-            smtp.login(email_address,email_password)
-            smtp.sendmail(email_address, recipient,msg.as_string())
-            smtp.quit()
-        self.loading_label.setText("Email Sent! (Please check your spam folder if you don't receive it).")
-        self.success_icon.setText('✓')
+        try:
+            with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
+                msg = MIMEMultipart()
+                msg['Subject']  = email_subject
+                msg['From']     = email_address
+                msg['To']       = recipient
+                body = MIMEText(message)
+                print('step 3')
+                msg.attach(body)
+                for image in images:
+                    with open(image,'rb') as f:
+                        image_data = f.read()
+                        print('step 4')
+                    mi = MIMEImage(image_data, name=os.path.basename(image))
+                    print('step 5')
+                    msg.attach(mi)
+                    print('step 6')
+                print('step 7')
+                smtp.ehlo()
+                smtp.starttls()
+                smtp.ehlo()
+                smtp.login(email_address,email_password)
+                smtp.sendmail(email_address, recipient,msg.as_string())
+                smtp.quit()
+        except Exception as e:
+            print(e)
+            print(recipient)
+            self.loading_label.setText("Uh oh! We're having trouble connecting, your host will have your photos after the event.")
+        
+        else:
+            self.loading_label.setText("Email Sent! (Please check your spam folder if you don't receive it).")
+            self.success_icon.setText('✓')
 
 class LoadingScreen(QWidget):
     def __init__(self, window=None):
