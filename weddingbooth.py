@@ -1,9 +1,9 @@
 import sys
 import time
 import PIL
-from PyQt5.QtWidgets import * 
-from PyQt5.QtGui import * 
-from PyQt5.QtCore import Qt, QTimer
+from PyQt6.QtWidgets import * 
+from PyQt6.QtGui import * 
+from PyQt6.QtCore import Qt, QTimer
 from threading import Thread
 
 countdown_length = 3
@@ -13,7 +13,7 @@ class Window(QMainWindow):
         super().__init__()
   
         # this will hide the title bar
-        self.setWindowFlag(Qt.FramelessWindowHint)
+        self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         # set the title
         self.setWindowTitle("Wedding Booth")
         # setting  the geometry of window (x,y position, width and height)
@@ -31,8 +31,8 @@ class Window(QMainWindow):
         self.Stack = QStackedWidget(self)
     
         self.stack1 = HomeScreen(window=self) #Home Screen (take photo + options)
-        self.stack2 = CountdownScreen() #Countdown Screen
-        self.stack3 = QWidget() #White screen
+        self.stack2 = CountdownScreen(window=self) #Countdown Screen
+        self.stack3 = BlankScreen(window=self) #White screen
         self.stack4 = QWidget() #Preview screen
         self.stack5 = QWidget() #Enter email
 
@@ -83,21 +83,41 @@ class CountdownScreen(QWidget):
         super().__init__()
         self.window = window
         self.countdown_label = QLabel("This is the countdown", self)
-        self.countdown_label.setGeometry(0,0,700,480)
+        self.countdown_label.setGeometry(0,0,800,480)
+        self.countdown_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.countdown_label.setFont(QFont('Montserrat', 100))
+        self.countdown_timer = QTimer()
+        self.countdown_timer.timeout.connect(self.countdown_end)
+        self.seconds = 3
         
     def widgetSelected(self):
-        self.countdown()
+        self.countdown_start()
+        
 
-    def countdown(self, seconds=3):
-        self.countdown_label.setText(str(seconds))
-        while seconds > 0:
-            print(seconds) #FLAG remove this line in PROD
-            self.countdown_label.setText(str(seconds))
-            time.sleep(1)
-            seconds -= 1
-    def photo_sequence(self): #Stack2
-        print("sequence started")
-        self.countdown(countdown_length)
+    def countdown_start(self):
+        self.countdown_label.setText(str(self.seconds))
+        self.countdown_timer.start(1000)
+
+
+    def countdown_end(self):
+        self.seconds -= 1
+        if self.seconds > 0:
+            print(self.seconds)
+            self.countdown_label.setText(str(self.seconds))
+            self.countdown_timer.start(1000)
+        elif self.seconds == 0:
+            self.window.changeScreen(2)
+
+class BlankScreen(QWidget):
+    def __init__(self, window=None):
+        super().__init__()
+        self.window = window
+        self.blank_label = QLabel("test", self)
+        self.blank_label.setGeometry(0,0,800,480)
+        self.setStyleSheet("background-color: white;")
+
+    def widgetSelected(self):
+        pass
 
 
 # Initialize app
