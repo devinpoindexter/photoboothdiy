@@ -187,7 +187,6 @@ class EmailScreen(QWidget):
         self.email_input.setGeometry(0,0,600,100)
         self.setStyleSheet("background-color: white;")
         self.email_input.setFocus()
-        self.email_input.mousePressEvent()
 
         self.send_button = QPushButton("Send", self)
         self.send_button.setGeometry(610,0,190,100)
