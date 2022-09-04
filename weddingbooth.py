@@ -176,7 +176,7 @@ class BlankScreen(QWidget):
         try:
             self.window.camera.capture('WBphoto.jpg')
         finally:
-            self.window.camera.close()
+            #self.window.camera.close()
             self.window.changeScreen(3)
 
 
