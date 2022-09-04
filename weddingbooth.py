@@ -74,9 +74,7 @@ class Window(QMainWindow):
     
     def refreshSelected(self):
         if self.Stack.currentWidget():
-            gui_delay = QTimer()
-            gui_delay.timeout.connect(self.Stack.currentWidget().widgetSelected)
-            gui_delay.start(100)
+            self.Stack.currentWidget().widgetSelected()
 
     def setupCamera(self):
         self.camera = picamera.PiCamera()
@@ -175,7 +173,10 @@ class BlankScreen(QWidget):
 
     def widgetSelected(self):
         try:
-            self.window.camera.capture('WBphoto.jpg')
+            gui_delay = QTimer()
+            take_photo = lambda: self.window.camera.capture('WBphoto.jpg')
+            gui_delay.timeout.connect(take_photo)
+            gui_delay.start(100)
         finally:
             self.window.camera.close()
             self.window.changeScreen(3)
