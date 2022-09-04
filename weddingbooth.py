@@ -74,7 +74,9 @@ class Window(QMainWindow):
     
     def refreshSelected(self):
         if self.Stack.currentWidget():
-            self.Stack.currentWidget().widgetSelected()
+            gui_delay = QTimer()
+            gui_delay.timeout.connect(self.Stack.currentWidget().widgetSelected)
+            gui_delay.start(100)
 
     def setupCamera(self):
         self.camera = picamera.PiCamera()
