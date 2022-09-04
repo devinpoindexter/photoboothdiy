@@ -161,6 +161,7 @@ class CountdownScreen(QWidget):
             self.countdown_timer.start(1000)
         elif self.seconds == 0:
             self.window.changeScreen(2)
+            self.seconds = 3 #reset for next time
 
 
 class BlankScreen(QWidget):
@@ -220,6 +221,8 @@ class EmailScreen(QWidget):
         pass
 
     def processEmail(self):
+        self.send_button.setEnabled(False)
+        self.loading_label.setText("Sending, please wait...")
         self.recipient_email = self.email_input.text()
         image_paths = []
         image_paths.append('WBphoto.jpg')
@@ -227,8 +230,6 @@ class EmailScreen(QWidget):
 
 
     def sendEmail(self, recipient, message, images):
-        self.send_button.setEnabled(False)
-        self.loading_label.setText("Sending, please wait...")
         try:
             with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
                 msg = MIMEMultipart()
@@ -295,3 +296,4 @@ sys.exit(app.exec())
 #Confirmation screen once photos are sent, then back to home page
 # "Flash" not properly working when camera takes photo
 # Need to fix issue where camera cannot start on second loop, increased GPU allocation may have fixed this, but may also be related to closing the picam, when we potentially should keep open
+# not seeing "sending please wait"
