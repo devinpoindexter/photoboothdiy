@@ -176,7 +176,7 @@ class BlankScreen(QWidget):
             gui_delay = QTimer()
             take_photo = lambda: self.window.camera.capture('WBphoto.jpg')
             gui_delay.timeout.connect(take_photo)
-            gui_delay.start(100)
+            gui_delay.start(1000)
         finally:
             self.window.camera.close()
             self.window.changeScreen(3)
