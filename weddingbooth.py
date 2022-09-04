@@ -154,6 +154,7 @@ class CountdownScreen(QWidget):
 
 
     def countdown_end(self):
+        self.countdown_timer.stop()
         self.seconds -= 1
         if self.seconds > 0:
             print(self.seconds)
@@ -176,7 +177,7 @@ class BlankScreen(QWidget):
         try:
             self.window.camera.capture('WBphoto.jpg')
         finally:
-            #self.window.camera.close()
+            self.window.camera.close()
             self.window.changeScreen(3)
 
 
@@ -215,6 +216,9 @@ class EmailScreen(QWidget):
         self.send_button.setGeometry(610,51,190,100)
         self.send_button.clicked.connect(self.processEmail)
         QGuiApplication.inputMethod().show()
+
+        self.reset_timer = QTimer()
+        self.reset_timer.timeout.connect(self.flowComplete)
 
 
     def widgetSelected(self):
@@ -265,12 +269,11 @@ class EmailScreen(QWidget):
             self.success_icon.setText('✓')
         finally:
             print('starting timer')
-            self.reset_timer = QTimer()
-            self.reset_timer.timeout.connect(self.flowComplete)
             self.reset_timer.start(4000)
             print('running timer')
 
     def flowComplete(self):
+        self.reset_timer.stop()
         print('finished timer')
         self.loading_label.setText("")
         self.success_icon.setText("")
