@@ -1,6 +1,7 @@
-import sys, os, time, configparser
+import sys, os, time, configparser, logging
 import PIL
 import smtplib
+from datetime import datetime
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
@@ -23,6 +24,9 @@ email_password = str(config["DEFAULT"]["SENDER-GMAIL-PASSWORD"])
 email_subject = str(config["DEFAULT"]["EMAIL-SUBJECT"])
 
 countdown_length = 3
+
+now = datetime.now().strftime('%m-%d-%Y')
+logging.basicConfig(filename=f'{now}.log', format='%(asctime)s %(message)s', level=logging.INFO)
 
 
 #####################################################################
@@ -175,8 +179,11 @@ class BlankScreen(QWidget):
 
     def widgetSelected(self):
         try:
-            self.window.camera.capture('WBphoto.jpg')
+            now = datetime.now()
+            filepath = '/photos/' + now.strftime('%Y') + '/' + now.strftime('%h-%d') + '/' + now.strftime('%H-%M-%S.jpg')
+            self.window.camera.capture(filepath)
         finally:
+            logging.info(f'took photo {filepath}')
             self.window.camera.close()
             self.window.changeScreen(3)
 
@@ -215,14 +222,14 @@ class EmailScreen(QWidget):
         self.send_button = QPushButton("Send", self)
         self.send_button.setGeometry(610,51,190,100)
         self.send_button.clicked.connect(self.processEmail)
-        QGuiApplication.inputMethod().show()
 
         self.reset_timer = QTimer()
         self.reset_timer.timeout.connect(self.flowComplete)
 
 
     def widgetSelected(self):
-        pass
+        QGuiApplication.inputMethod().show()
+
 
     def processEmail(self):
         self.send_button.setEnabled(False)
@@ -268,6 +275,7 @@ class EmailScreen(QWidget):
             self.loading_label.setText("Email Sent! (Please check your spam folder if you don't receive it)")
             self.success_icon.setText('✓')
         finally:
+            logging.info(f'Sent photo to {recipient}')
             print('starting timer')
             self.reset_timer.start(4000)
             print('running timer')
@@ -278,6 +286,8 @@ class EmailScreen(QWidget):
         self.loading_label.setText("")
         self.success_icon.setText("")
         self.window.changeScreen(0)
+        self.send_button.setEnabled(True)
+        self.email_input.clear()
         print('screen should have changed')
 
 #####################################################################
@@ -294,9 +304,13 @@ window = Window()
 sys.exit(app.exec())
 
 
-#Have camera take multiple photos, name them properly, and make sure they all get sent
-#Send user to new screen onces send is hit, start a loading screen before email process starts, have message that says to check your spam folder
-#Confirmation screen once photos are sent, then back to home page
+### PRIORITIES ###
 # "Flash" not properly working when camera takes photo
-# Need to fix issue where camera cannot start on second loop, increased GPU allocation may have fixed this, but may also be related to closing the picam, when we potentially should keep open
 # not seeing "sending please wait"
+# make sure we can even focus the camera correctly :)
+# Show photo preview before and after taking
+
+### IDEAS ###
+# Add frame to a copy of the photo
+# Do we want to select single vs burst?
+# 3, 5, or 7 second delay options?

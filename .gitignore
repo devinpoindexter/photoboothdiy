@@ -5,3 +5,4 @@ env/
 .Trashes
 .DS_Store
 config.ini
+*/.DS_Store
