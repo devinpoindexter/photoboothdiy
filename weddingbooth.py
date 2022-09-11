@@ -180,7 +180,8 @@ class BlankScreen(QWidget):
     def widgetSelected(self):
         try:
             now = datetime.now()
-            filepath = '/photos/' + now.strftime('%Y') + '/' + now.strftime('%h-%d') + '/' + now.strftime('%H-%M-%S.jpg')
+            #filepath = '/photos/' + now.strftime('%Y') + '/' + now.strftime('%h-%d') + '/' + now.strftime('%H-%M-%S.jpg')
+            filepath = now.strftime('%Y') + '-' + now.strftime('%h-%d') + '-' + now.strftime('%H-%M-%S.jpg')
             self.window.camera.capture(filepath)
         finally:
             logging.info(f'took photo {filepath}')
@@ -306,9 +307,10 @@ sys.exit(app.exec())
 
 ### PRIORITIES ###
 # "Flash" not properly working when camera takes photo
-# not seeing "sending please wait"
+# Not seeing "sending please wait"
 # make sure we can even focus the camera correctly :)
 # Show photo preview before and after taking
+# Make settings screen (exit button and wifi editor)
 
 ### IDEAS ###
 # Add frame to a copy of the photo
