@@ -6,3 +6,4 @@ env/
 .DS_Store
 config.ini
 */.DS_Store
+pqty testing.py

@@ -1,6 +1,7 @@
 import sys, os, time, configparser, logging
 import PIL
 import smtplib
+from pathlib import Path
 from datetime import datetime
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
@@ -180,8 +181,9 @@ class BlankScreen(QWidget):
     def widgetSelected(self):
         try:
             now = datetime.now()
-            filepath = 'photos/' + now.strftime('%Y') + '/' + now.strftime('%h-%d') + '/' + now.strftime('%H-%M-%S.jpg')
-            #filepath = 'photos/' + now.strftime('%Y') + '-' + now.strftime('%h-%d') + '-' + now.strftime('%H-%M-%S.jpg')
+            folderpath = 'photos/' + now.strftime('%Y') + '/' + now.strftime('%h-%d') +'/'
+            Path().absolute().joinpath(folderpath).mkdir(parents=True, exist_ok=True)
+            filepath = folderpath + now.strftime('%H-%M-%S.jpg')
             self.window.camera.capture(filepath)
         finally:
             logging.info(f'took photo {filepath}')
