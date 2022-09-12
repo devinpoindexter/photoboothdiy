@@ -46,6 +46,7 @@ class Window(QMainWindow):
         self.createStack()
         QGuiApplication.inputMethod().visibleChanged.connect(self.keyboardMask) # make sure keyboard doesn't block app
 
+        self.photo_paths = []
 
         # show all the widgets (maximized)
         #self.showMaximized() #FLAG UNCOMMENT THIS LINE IN PROD
@@ -180,11 +181,15 @@ class BlankScreen(QWidget):
 
     def widgetSelected(self):
         try:
+            self.window.photo_paths.clear()
+            
             now = datetime.now()
             folderpath = 'photos/' + now.strftime('%Y') + '/' + now.strftime('%h-%d') +'/'
             Path().absolute().joinpath(folderpath).mkdir(parents=True, exist_ok=True)
             filepath = folderpath + now.strftime('%H-%M-%S.jpg')
+
             self.window.camera.capture(filepath)
+            self.window.photo_paths.append(filepath)
         finally:
             logging.info(f'took photo {filepath}')
             self.window.camera.close()
@@ -238,9 +243,7 @@ class EmailScreen(QWidget):
         self.send_button.setEnabled(False)
         self.loading_label.setText("Sending, please wait...")
         self.recipient_email = self.email_input.text()
-        image_paths = []
-        image_paths.append('WBphoto.jpg')
-        self.sendEmail(self.recipient_email, "Thank you so much for enjoying our special day with us, here are your photos!", image_paths)
+        self.sendEmail(self.recipient_email, "Thank you so much for enjoying our special day with us, here are your photos!", self.window.photo_paths)
 
 
     def sendEmail(self, recipient, message, images):
