@@ -23,6 +23,7 @@ config.read('config.ini')
 email_address = str(config["DEFAULT"]["SENDER-GMAIL-ADDRESS"])
 email_password = str(config["DEFAULT"]["SENDER-GMAIL-PASSWORD"])
 email_subject = str(config["DEFAULT"]["EMAIL-SUBJECT"])
+email_body = str(config["DEFAULT"]["EMAIL-BODY"])
 
 countdown_length = 3
 
@@ -140,7 +141,7 @@ class CountdownScreen(QWidget):
     def __init__(self, window=None):
         super().__init__()
         self.window = window
-        self.countdown_label = QLabel("This is the countdown", self)
+        self.countdown_label = QLabel("", self)
         self.countdown_label.setGeometry(0,0,800,480)
         self.countdown_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.countdown_label.setFont(QFont('Montserrat', 100))
@@ -156,7 +157,7 @@ class CountdownScreen(QWidget):
 
     def countdown_start(self):
         self.countdown_label.setText(str(self.seconds))
-        self.countdown_timer.start(1000) #Add half second padding to give pi time to update screen
+        self.countdown_timer.start(500) #Add half second padding to give pi time to update screen
 
 
     def countdown_end(self):
@@ -180,6 +181,13 @@ class BlankScreen(QWidget):
         self.setStyleSheet("background-color: white;")
 
     def widgetSelected(self):
+        self.photo_delay = QTimer()
+        self.photo_delay.timeout.connect(self.take_photo)
+        self.photo_delay.start(500)
+
+
+    def take_photo(self):
+        self.photo_delay.stop()
         try:
             self.window.photo_paths.clear()
             
@@ -194,7 +202,6 @@ class BlankScreen(QWidget):
             logging.info(f'took photo {filepath}')
             self.window.camera.close()
             self.window.changeScreen(3)
-
 
 class EmailScreen(QWidget):
     def __init__(self, window=None):
@@ -231,6 +238,9 @@ class EmailScreen(QWidget):
         self.send_button.setGeometry(610,51,190,100)
         self.send_button.clicked.connect(self.processEmail)
 
+        self.email_delay = QTimer()
+        self.email_delay.timeout.connect(self.sendEmail)
+
         self.reset_timer = QTimer()
         self.reset_timer.timeout.connect(self.flowComplete)
 
@@ -243,20 +253,21 @@ class EmailScreen(QWidget):
         self.send_button.setEnabled(False)
         self.loading_label.setText("Sending, please wait...")
         self.recipient_email = self.email_input.text()
-        self.sendEmail(self.recipient_email, "Thank you so much for enjoying our special day with us, here are your photos!", self.window.photo_paths)
+        self.email_delay.start(500)
 
 
-    def sendEmail(self, recipient, message, images):
+    def sendEmail(self):
+        self.email_delay.stop()
         try:
             with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
                 msg = MIMEMultipart()
                 msg['Subject']  = email_subject
                 msg['From']     = email_address
-                msg['To']       = recipient
-                body = MIMEText(message)
+                msg['To']       = self.recipient_email
+                body = MIMEText(email_body)
                 msg.attach(body)
                 
-                for image in images:
+                for image in self.window.photo_paths:
                     with open(image,'rb') as f:
                         image_data = f.read()
                         print('step 4')
@@ -269,19 +280,19 @@ class EmailScreen(QWidget):
                 smtp.starttls()
                 smtp.ehlo()
                 smtp.login(email_address,email_password)
-                smtp.sendmail(email_address, recipient,msg.as_string())
+                smtp.sendmail(email_address, self.recipient_email, msg.as_string())
                 smtp.quit()
         
         except Exception as e:
             print(e)
-            print(recipient)
+            print(self.recipient_email)
             self.loading_label.setText("Uh oh! We're having trouble connecting, your host will have your photos after the event.")
         
         else:
             self.loading_label.setText("Email Sent! (Please check your spam folder if you don't receive it)")
             self.success_icon.setText('✓')
         finally:
-            logging.info(f'Sent photo to {recipient}')
+            logging.info(f'Sent photo to {self.recipient_email}')
             print('starting timer')
             self.reset_timer.start(4000)
             print('running timer')
@@ -316,6 +327,7 @@ sys.exit(app.exec())
 # make sure we can even focus the camera correctly :)
 # Show photo preview before and after taking
 # Make settings screen (exit button and wifi editor)
+# Option to retake instead of sending
 
 ### IDEAS ###
 # Add frame to a copy of the photo
