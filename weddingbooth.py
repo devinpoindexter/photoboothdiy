@@ -25,7 +25,6 @@ email_password = str(config["DEFAULT"]["SENDER-GMAIL-PASSWORD"])
 email_subject = str(config["DEFAULT"]["EMAIL-SUBJECT"])
 email_body = str(config["DEFAULT"]["EMAIL-BODY"])
 
-countdown_length = 3
 
 now = datetime.now().strftime('%m-%d-%Y')
 logging.basicConfig(filename=f'{now}.log', format='%(asctime)s %(message)s', level=logging.INFO)
@@ -47,6 +46,8 @@ class Window(QMainWindow):
         self.createStack()
         QGuiApplication.inputMethod().visibleChanged.connect(self.keyboardMask) # make sure keyboard doesn't block app
 
+        self.countdown_length = 3
+        self.burst_count = 1
         self.photo_paths = []
 
         # show all the widgets (maximized)
@@ -65,8 +66,8 @@ class Window(QMainWindow):
         self.stack1 = HomeScreen(window=self) #Home Screen (take photo + options)
         self.stack2 = CountdownScreen(window=self) #Countdown Screen
         self.stack3 = BlankScreen(window=self) #White screen
-        self.stack4 = EmailScreen(window=self) #Preview screen
-        self.stack5 = QWidget() #Enter email
+        self.stack4 = EmailScreen(window=self) #Enter Email
+        self.stack5 = SettingsScreen(window=self) #Admin
 
         self.Stack.addWidget(self.stack1)
         self.Stack.addWidget(self.stack2)
@@ -124,13 +125,42 @@ class HomeScreen(QWidget):
     def __init__(self, window=None):
         super().__init__()        
         self.window = window     
+        
         self.photo_button = QPushButton("", self)
         self.photo_button.setGeometry(0,0,700,480)
-        #FLAG Need to figure out how to make button a gif, or put gif in background using QMovie
         self.photo_button.setStyleSheet("background-image: url(./assets/take_photo.png); border: none")
-        next_screen = lambda: self.window.changeScreen(1)
-        self.photo_button.clicked.connect(next_screen)
+        countdown_screen = lambda: self.window.changeScreen(1)
+        self.photo_button.clicked.connect(countdown_screen)
+
+        self.settings_button = QPushButton("", self)
+        self.settings_button.setGeometry(700,380,100,50)
+        self.settings_button.setStyleSheet("background-image: url(./assets/settings_button.png); border: none")
+        settings_screen = lambda: self.window.changeScreen(5)
+        self.settings_button.clicked.connect(settings_screen)
+
+        self.burst_options = [1,3,5]
+        self.burst_button = QPushButton("", self)
+        self.burst_button.setGeometry(700,0,100,100)
+        self.burst_button.setStyleSheet("background-image: url(./assets/burst_1.png); border: none")
+        self.burst_button.clicked.connect(changeBurst)
+    
+        self.timer_options = [3,5,7]
+        self.timer_button = QPushButton("", self)
+        self.timer_button.setGeometry(700,150,100,100)
+        self.timer_button.setStyleSheet("background-image: url(./assets/countdown_3.png); border: none") #FLAG Update
+        self.timer_button.clicked.connect(changeTimer)
+
+    def changeBurst(self):
+        self.burst_options.append(self.burst_options.pop(0)) #Cycle current value to end of loop
+        new_count = self.burst_options[0]
+        self.window.burst_count = new_count # Set count to new value
+        self.burst_button.setStyleSheet(f'background-image: url(./assets/burst_{new_count}.png); border: none')
         
+    def changeTimer(self):
+        self.timer_options.append(self.timer_options.pop(0)) #Cycle current value to end of loop
+        new_length = self.timer_options[0]
+        self.window.countdown_length = new_length # Set count to new value
+        self.burst_button.setStyleSheet(f'background-image: url(./assets/countdown_{new_length}.png); border: none')
 
 
     def widgetSelected(self): #Called on each screen when that screen becomes active.
@@ -147,10 +177,11 @@ class CountdownScreen(QWidget):
         self.countdown_label.setFont(QFont('Montserrat', 100))
         self.countdown_timer = QTimer()
         self.countdown_timer.timeout.connect(self.countdown_end)
-        self.seconds = 3
+        self.seconds = self.window.countdown_length
         
     def widgetSelected(self):
         self.window.setupCamera()
+        self.seconds = self.window.countdown_length
         self.countdown_start()
 
         
@@ -169,14 +200,13 @@ class CountdownScreen(QWidget):
             self.countdown_timer.start(1000)
         elif self.seconds == 0:
             self.window.changeScreen(2)
-            self.seconds = 3 #reset for next time
 
 
 class BlankScreen(QWidget):
     def __init__(self, window=None):
         super().__init__()
         self.window = window
-        self.blank_label = QLabel("test", self)
+        self.blank_label = QLabel("", self) #creating blank screen to use as flash
         self.blank_label.setGeometry(0,0,800,480)
         self.setStyleSheet("background-color: white;")
 
@@ -188,20 +218,29 @@ class BlankScreen(QWidget):
 
     def take_photo(self):
         self.photo_delay.stop()
-        try:
-            self.window.photo_paths.clear()
-            
-            now = datetime.now()
-            folderpath = 'photos/' + now.strftime('%Y') + '/' + now.strftime('%h-%d') +'/'
-            Path().absolute().joinpath(folderpath).mkdir(parents=True, exist_ok=True)
-            filepath = folderpath + now.strftime('%H-%M-%S.jpg')
+        count = 1
+        while count <= self.window.burst_count:
+            try:
+                self.window.camera.start_preview()
+                self.window.photo_paths.clear()
+                
+                now = datetime.now()
+                folderpath = 'photos/' + now.strftime('%Y') + '/' + now.strftime('%h-%d') +'/'
+                Path().absolute().joinpath(folderpath).mkdir(parents=True, exist_ok=True)
+                filepath = folderpath + now.strftime('%H-%M-%S.jpg')
 
-            self.window.camera.capture(filepath)
-            self.window.photo_paths.append(filepath)
-        finally:
-            logging.info(f'took photo {filepath}')
-            self.window.camera.close()
-            self.window.changeScreen(3)
+                self.window.camera.capture(filepath)
+                self.window.photo_paths.append(filepath)
+            finally:
+                logging.info(f'took photo {filepath}')
+                self.window.camera.stop_preview()
+            count += 1
+            
+            if count <= self.window.burst_count:
+                sleep(0.8)
+
+        self.window.camera.close()
+        self.window.changeScreen(3)
 
 class EmailScreen(QWidget):
     def __init__(self, window=None):
@@ -238,6 +277,10 @@ class EmailScreen(QWidget):
         self.send_button.setGeometry(610,51,190,100)
         self.send_button.clicked.connect(self.processEmail)
 
+        self.back_button = QPushButton("⬅ Back | Retake Photos", self)
+        self.back_button.setGeometry(0,0,80,15)
+        self.back_button.clicked.connect(self.confirmBack)
+
         self.email_delay = QTimer()
         self.email_delay.timeout.connect(self.sendEmail)
 
@@ -247,6 +290,12 @@ class EmailScreen(QWidget):
 
     def widgetSelected(self):
         QGuiApplication.inputMethod().show()
+
+    def confirmBack(self):
+        reply = QMessageBox.question(self, 'Go Back', 'Are you sure you want to go back and lose your photos?',
+        QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            self.window.changeScreen(0)
 
 
     def processEmail(self):
@@ -307,6 +356,14 @@ class EmailScreen(QWidget):
         self.email_input.clear()
         print('screen should have changed')
 
+class SettingsScreen(QWidget):
+    def __init__(self, window=None):
+        super().__init__()
+        self.window = window
+        #Need exit button
+        #Need wifi instructions
+        #Need back button
+        #Use showMinized command
 #####################################################################
 ### Run App
 #####################################################################
@@ -322,8 +379,6 @@ sys.exit(app.exec())
 
 
 ### PRIORITIES ###
-# "Flash" not properly working when camera takes photo
-# Not seeing "sending please wait"
 # make sure we can even focus the camera correctly :)
 # Show photo preview before and after taking
 # Make settings screen (exit button and wifi editor)
@@ -331,5 +386,9 @@ sys.exit(app.exec())
 
 ### IDEAS ###
 # Add frame to a copy of the photo
+
+
+### Done ###
+# Option to retake instead of sending
 # Do we want to select single vs burst?
 # 3, 5, or 7 second delay options?
