@@ -218,10 +218,10 @@ class BlankScreen(QWidget):
     def take_photo(self):
         self.photo_delay.stop()
         count = 1
+        self.window.photo_paths.clear()
         while count <= self.window.burst_count:
             try:
                 self.window.camera.start_preview()
-                self.window.photo_paths.clear()
                 
                 now = datetime.now()
                 folderpath = 'photos/' + now.strftime('%Y') + '/' + now.strftime('%h-%d') +'/'
