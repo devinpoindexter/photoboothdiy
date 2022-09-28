@@ -225,7 +225,7 @@ class BlankScreen(QWidget):
                 try:
                     
                     now = datetime.now()
-                    folderpath = 'photos/' + now.strftime('%Y') + '/' + now.strftime('%h') + '/' now.strftime('%d') +'/'
+                    folderpath = 'photos/' + now.strftime('%Y') + '/' + now.strftime('%h') + '/' + now.strftime('%d') +'/'
                     Path().absolute().joinpath(folderpath).mkdir(parents=True, exist_ok=True)
                     filepath = folderpath + now.strftime(f'%H-%M-%S_{count}.jpg')
 
