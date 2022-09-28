@@ -142,13 +142,13 @@ class HomeScreen(QWidget):
         self.burst_button = QPushButton("", self)
         self.burst_button.setGeometry(700,0,100,100)
         self.burst_button.setStyleSheet("background-image: url(./assets/burst_1.png); border: none")
-        self.burst_button.clicked.connect(changeBurst)
+        self.burst_button.clicked.connect(self.changeBurst)
     
         self.timer_options = [3,5,7]
         self.timer_button = QPushButton("", self)
         self.timer_button.setGeometry(700,150,100,100)
         self.timer_button.setStyleSheet("background-image: url(./assets/countdown_3.png); border: none") #FLAG Update
-        self.timer_button.clicked.connect(changeTimer)
+        self.timer_button.clicked.connect(self.changeTimer)
 
     def changeBurst(self):
         self.burst_options.append(self.burst_options.pop(0)) #Cycle current value to end of loop
