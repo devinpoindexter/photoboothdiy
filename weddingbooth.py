@@ -219,27 +219,30 @@ class BlankScreen(QWidget):
         self.photo_delay.stop()
         count = 1
         self.window.photo_paths.clear()
-        while count <= self.window.burst_count:
-            try:
-                self.window.camera.start_preview()
+        try:
+            self.window.camera.start_preview()
+            while count <= self.window.burst_count:
+                try:
+                    
+                    now = datetime.now()
+                    folderpath = 'photos/' + now.strftime('%Y') + '/' + + now.strftime('%h') + '/' now.strftime('-%d') +'/'
+                    Path().absolute().joinpath(folderpath).mkdir(parents=True, exist_ok=True)
+                    filepath = folderpath + now.strftime(f'%H-%M-%S_{count}.jpg')
+
+                    self.window.camera.capture(filepath)
+                    self.window.photo_paths.append(filepath)
+                finally:
+                    logging.info(f'took photo {filepath}')
+
+                count += 1
                 
-                now = datetime.now()
-                folderpath = 'photos/' + now.strftime('%Y') + '/' + now.strftime('%h-%d') +'/'
-                Path().absolute().joinpath(folderpath).mkdir(parents=True, exist_ok=True)
-                filepath = folderpath + now.strftime('%H-%M-%S.jpg')
-
-                self.window.camera.capture(filepath)
-                self.window.photo_paths.append(filepath)
-            finally:
-                logging.info(f'took photo {filepath}')
-                self.window.camera.stop_preview()
-            count += 1
-            
-            if count <= self.window.burst_count:
-                loop = QEventLoop()
-                QTimer.singleShot(800, loop.quit)
-                loop.exec_()
-
+                if count <= self.window.burst_count: # Delay between photos
+                    loop = QEventLoop()
+                    QTimer.singleShot(500, loop.quit)
+                    loop.exec_()
+        except Exception as e:
+            self.window.camera.stop_preview()
+        
         self.window.camera.close()
         self.window.changeScreen(3)
 
