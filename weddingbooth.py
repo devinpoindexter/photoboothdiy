@@ -236,7 +236,9 @@ class BlankScreen(QWidget):
             count += 1
             
             if count <= self.window.burst_count:
-                sleep(0.8)
+                loop = QEventLoop()
+                QTimer.singleShot(800, loop.quit)
+                loop.exec_()
 
         self.window.camera.close()
         self.window.changeScreen(3)
