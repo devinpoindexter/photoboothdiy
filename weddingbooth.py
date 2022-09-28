@@ -160,7 +160,7 @@ class HomeScreen(QWidget):
         self.timer_options.append(self.timer_options.pop(0)) #Cycle current value to end of loop
         new_length = self.timer_options[0]
         self.window.countdown_length = new_length # Set count to new value
-        self.burst_button.setStyleSheet(f'background-image: url(./assets/countdown_{new_length}.png); border: none')
+        self.timer_button.setStyleSheet(f'background-image: url(./assets/countdown_{new_length}.png); border: none')
 
 
     def widgetSelected(self): #Called on each screen when that screen becomes active.
