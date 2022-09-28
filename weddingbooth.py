@@ -9,7 +9,7 @@ from email.mime.multipart import MIMEMultipart
 import picamera
 from PyQt5.QtWidgets import * 
 from PyQt5.QtGui import * 
-from PyQt5.QtCore import Qt, QObject, QTimer
+from PyQt5.QtCore import Qt, QObject, QTimer, QEventLoop
 from threading import Thread
 
 #####################################################################
