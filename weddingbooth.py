@@ -177,7 +177,6 @@ class CountdownScreen(QWidget):
         self.countdown_label.setFont(QFont('Montserrat', 100))
         self.countdown_timer = QTimer()
         self.countdown_timer.timeout.connect(self.countdown_end)
-        self.seconds = self.window.countdown_length
         
     def widgetSelected(self):
         self.window.setupCamera()
