@@ -279,7 +279,7 @@ class EmailScreen(QWidget):
         self.send_button.clicked.connect(self.processEmail)
 
         self.back_button = QPushButton("⬅ Back | Retake Photos", self)
-        self.back_button.setGeometry(0,0,80,15)
+        self.back_button.setGeometry(0,10,160,30)
         self.back_button.clicked.connect(self.confirmBack)
 
         self.email_delay = QTimer()
@@ -316,7 +316,7 @@ class EmailScreen(QWidget):
                 msg['To']       = self.recipient_email
                 body = MIMEText(email_body)
                 msg.attach(body)
-                
+                print(self.window.photo_paths)
                 for image in self.window.photo_paths:
                     with open(image,'rb') as f:
                         image_data = f.read()
@@ -383,7 +383,7 @@ sys.exit(app.exec())
 # make sure we can even focus the camera correctly :)
 # Show photo preview before and after taking
 # Make settings screen (exit button and wifi editor)
-# Option to retake instead of sending
+# Not all images are attaching
 
 ### IDEAS ###
 # Add frame to a copy of the photo
