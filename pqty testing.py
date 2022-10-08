@@ -15,7 +15,7 @@ output = list(networks.keys())
 for i,v in enumerate(output):
     print(f'{i}:{v}')
 
-selection = input()
+selection = int(input())
 
 if output[selection]:
     Print(f'Connecting to {output[selection]}')
