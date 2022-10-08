@@ -15,9 +15,9 @@ output = list(networks.keys())
 for i,v in enumerate(output):
     print(f'{i}:{v}')
 
-selection = int(input())
+selection = int(input("Select the number of the network you'd like to connect to."))
 
 if output[selection]:
-    Print(f'Connecting to {output[selection]}')
+    print(f'Connecting to {output[selection]}')
 else:
     print('Please make a valid selection')
