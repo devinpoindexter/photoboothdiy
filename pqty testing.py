@@ -19,7 +19,11 @@ while selected == False:
 
     selection = int(input("Enter the number of the network you'd like to connect to: "))
 
-    if output[selection]:
+    try:
+        output[selection]
+    except:
+        print('Please make a valid selection')
+    else: 
         scheme = Scheme.find('wlan0', 'home')
         if not scheme:
             password = input(f'Please enter the password for "{output[selection]}": ')
@@ -36,5 +40,4 @@ while selected == False:
         else:
             selected = True
             print("Connected")
-    else:
-        print('Please make a valid selection')
+
