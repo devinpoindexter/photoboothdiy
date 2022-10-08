@@ -220,7 +220,6 @@ class BlankScreen(QWidget):
         count = 1
         self.window.photo_paths.clear()
         try:
-            self.window.camera.start_preview()
             while count <= self.window.burst_count:
                 try:
                     
@@ -238,11 +237,10 @@ class BlankScreen(QWidget):
                 
                 if count <= self.window.burst_count: # Delay between photos
                     loop = QEventLoop()
-                    QTimer.singleShot(500, loop.quit)
+                    QTimer.singleShot(1000, loop.quit)
                     loop.exec_()
         except Exception as e:
-            self.window.camera.stop_preview()
-        
+            pass
         self.window.camera.close()
         self.window.changeScreen(3)
 
@@ -281,7 +279,7 @@ class EmailScreen(QWidget):
         self.send_button.setGeometry(610,51,190,100)
         self.send_button.clicked.connect(self.processEmail)
 
-        self.back_button = QPushButton("⬅ Back | Retake Photos", self)
+        self.back_button = QPushButton("⬅ Back | Retake", self)
         self.back_button.setGeometry(0,10,160,30)
         self.back_button.clicked.connect(self.confirmBack)
 
