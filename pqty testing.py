@@ -12,12 +12,29 @@ for network in raw_networks:
 
 output = list(networks.keys())
 
-for i,v in enumerate(output):
-    print(f'{i}:{v}')
+selected=False
+while selected == False: 
+    for i,v in enumerate(output):
+        print(f'{i}: {v}')
 
-selection = int(input("Select the number of the network you'd like to connect to."))
+    selection = int(input("Enter the number of the network you'd like to connect to: "))
 
-if output[selection]:
-    print(f'Connecting to {output[selection]}')
-else:
-    print('Please make a valid selection')
+    if output[selection]:
+        scheme = Scheme.find('wlan0', 'home')
+        if not scheme:
+            password = input(f'Please enter the password for "{output[selection]}": ')
+            try:
+                scheme = Scheme.for_cell('wlan0', output[selection], networks[output[selection]], password)
+                scheme.save()
+            except Exception as e:
+                print(e)
+
+        try:
+            scheme.activate()
+        except Exception as e:
+            print(e)
+        else:
+            selected = True
+            print("Connected")
+    else:
+        print('Please make a valid selection')
