@@ -27,7 +27,7 @@ email_body = str(config["DEFAULT"]["EMAIL-BODY"])
 
 
 now = datetime.now().strftime('%m-%d-%Y')
-logging.basicConfig(filename=f'{now}.log', format='%(asctime)s %(message)s', level=logging.INFO)
+logging.basicConfig(filename=f'logs/{now}.log', format='%(asctime)s %(message)s', level=logging.INFO)
 
 
 #####################################################################
@@ -362,10 +362,31 @@ class SettingsScreen(QWidget):
     def __init__(self, window=None):
         super().__init__()
         self.window = window
-        #Need exit button
-        #Need wifi instructions
-        #Need back button
-        #Use showMinized command
+       
+        self.back_button = QPushButton("⬅ Back | Home", self)
+        self.back_button.setGeometry(0,10,160,30)
+        go_back = lambda: self.window.changeScreen(0)
+        self.back_button.clicked.connect(go_back)
+
+        self.close_button = QPushButton("Exit App", self)
+        self.close_button.setGeometry(100,150,150,100)
+        self.close_button.clicked.connect(self.confirmClose)
+
+        self.min_button = QPushButton("Minimize App", self)
+        self.min_button.setGeometry(300,150,150,100)
+        self.min_button.clicked.connect(self.window.showMinimized)
+
+        self.email_label = QLabel("Change Wifi: \n Minimize app & click wifi icon in menu ", self)
+        self.email_label.setGeometry(500,150,150,100)
+        #self.email_label.setFont(QFont('Montserrat', 25))
+        self.email_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        
+
+    def confirmClose(self):
+        reply = QMessageBox.question(self, 'Exit app?', 'Are you sure you want to exit the app?',
+        QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            self.window.close()
 #####################################################################
 ### Run App
 #####################################################################
