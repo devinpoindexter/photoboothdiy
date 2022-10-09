@@ -135,7 +135,7 @@ class HomeScreen(QWidget):
         self.settings_button = QPushButton("", self)
         self.settings_button.setGeometry(700,380,100,50)
         self.settings_button.setStyleSheet("background-image: url(./assets/settings_button.png); border: none")
-        settings_screen = lambda: self.window.changeScreen(5)
+        settings_screen = lambda: self.window.changeScreen(4)
         self.settings_button.clicked.connect(settings_screen)
 
         self.burst_options = [1,3,5]
