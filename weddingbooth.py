@@ -42,7 +42,7 @@ class Window(QMainWindow):
         # UI customizations
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         self.setWindowTitle("Wedding Booth")
-        self.setGeometry(0, 100, 800, 480) #FLAG change to (0,0,800,480)
+        self.setGeometry(0, 40, 800, 480) #FLAG change to (0,0,800,480)
         self.createStack()
         QGuiApplication.inputMethod().visibleChanged.connect(self.keyboardMask) # make sure keyboard doesn't block app
 
