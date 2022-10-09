@@ -63,17 +63,17 @@ class Window(QMainWindow):
     def createStack(self):
         self.Stack = QStackedWidget(self)
     
-        self.stack1 = HomeScreen(window=self) #Home Screen (take photo + options)
-        self.stack2 = CountdownScreen(window=self) #Countdown Screen
-        self.stack3 = BlankScreen(window=self) #White screen
-        self.stack4 = EmailScreen(window=self) #Enter Email
-        self.stack5 = SettingsScreen(window=self) #Admin
+        self.stack0 = HomeScreen(window=self) #Home Screen (take photo + options)
+        self.stack1 = CountdownScreen(window=self) #Countdown Screen
+        self.stack2 = BlankScreen(window=self) #White screen
+        self.stack3 = EmailScreen(window=self) #Enter Email
+        self.stack4 = SettingsScreen(window=self) #Admin
 
+        self.Stack.addWidget(self.stack0)
         self.Stack.addWidget(self.stack1)
         self.Stack.addWidget(self.stack2)
         self.Stack.addWidget(self.stack3)
         self.Stack.addWidget(self.stack4)
-        self.Stack.addWidget(self.stack5)
         self.Stack.currentChanged.connect(self.refreshSelected)
         self.setCentralWidget(self.Stack)
         
