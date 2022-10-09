@@ -380,6 +380,9 @@ class SettingsScreen(QWidget):
         self.email_label.setGeometry(500,150,150,100)
         #self.email_label.setFont(QFont('Montserrat', 25))
         self.email_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+    def widgetSelected(self): #Called on each screen when that screen becomes active.
+        pass
         
 
     def confirmClose(self):
