@@ -205,7 +205,8 @@ class BlankScreen(QWidget):
     def __init__(self, window=None):
         super().__init__()
         self.window = window
-        self.blank_label = QLabel("", self) #creating blank screen to use as flash
+        self.blank_label = QLabel("☺", self) #creating blank screen to use as flash
+        self.desc_label.setFont(QFont('Montserrat', 40))
         self.blank_label.setGeometry(0,0,800,480)
         self.setStyleSheet("background-color: white;")
 
@@ -280,7 +281,7 @@ class EmailScreen(QWidget):
         self.send_button.clicked.connect(self.processEmail)
 
         self.back_button = QPushButton("⬅ Back | Retake", self)
-        self.back_button.setGeometry(0,10,160,30)
+        self.back_button.setGeometry(0,10,130,30)
         self.back_button.clicked.connect(self.confirmBack)
 
         self.email_delay = QTimer()
@@ -364,7 +365,7 @@ class SettingsScreen(QWidget):
         self.window = window
        
         self.back_button = QPushButton("⬅ Back | Home", self)
-        self.back_button.setGeometry(0,10,160,30)
+        self.back_button.setGeometry(0,10,130,30)
         go_back = lambda: self.window.changeScreen(0)
         self.back_button.clicked.connect(go_back)
 
@@ -376,7 +377,7 @@ class SettingsScreen(QWidget):
         self.min_button.setGeometry(300,150,150,100)
         self.min_button.clicked.connect(self.window.showMinimized)
 
-        self.email_label = QLabel("Change Wifi: \n Minimize app & click wifi icon in menu ", self)
+        self.email_label = QLabel("To Change Wifi: \n Minimize app & \nclick wifi icon in menu ", self)
         self.email_label.setGeometry(500,150,150,100)
         #self.email_label.setFont(QFont('Montserrat', 25))
         self.email_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -407,8 +408,8 @@ sys.exit(app.exec())
 ### PRIORITIES ###
 # make sure we can even focus the camera correctly :)
 # Show photo preview before and after taking
-# Make settings screen (exit button and wifi editor)
-# Not all images are attaching
+# Instead of blank screen, show preview and animation between photos
+# Make Photo Graphic on home screen flash different colors
 
 ### IDEAS ###
 # Add frame to a copy of the photo
