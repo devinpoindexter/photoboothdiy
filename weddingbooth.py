@@ -42,7 +42,7 @@ class Window(QMainWindow):
         # UI customizations
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         self.setWindowTitle("Wedding Booth")
-        self.setGeometry(0, 40, 800, 480) #FLAG change to (0,0,800,480)
+        self.setGeometry(0, 0, 800, 480) #FLAG change to (0,0,800,480)
         self.createStack()
         QGuiApplication.inputMethod().visibleChanged.connect(self.keyboardMask) # make sure keyboard doesn't block app
 
@@ -208,6 +208,8 @@ class BlankScreen(QWidget):
         self.blank_label = QLabel("☺", self) #creating blank screen to use as flash
         self.blank_label.setFont(QFont('Montserrat', 40))
         self.blank_label.setGeometry(0,0,800,480)
+        self.blank_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
         self.setStyleSheet("background-color: white;")
 
     def widgetSelected(self):
@@ -377,7 +379,7 @@ class SettingsScreen(QWidget):
         self.min_button.setGeometry(300,150,150,100)
         self.min_button.clicked.connect(self.window.showMinimized)
 
-        self.email_label = QLabel("To Change Wifi: \n Minimize app & \nclick wifi icon in menu ", self)
+        self.email_label = QLabel("To Change Wifi: \n Minimize app & \nclick wifi icon \n in menu ", self)
         self.email_label.setGeometry(500,150,150,100)
         #self.email_label.setFont(QFont('Montserrat', 25))
         self.email_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
