@@ -131,10 +131,9 @@ class HomeScreen(QWidget):
 
         self.photo_button = QPushButton("", self)
         self.photo_button.setGeometry(0,0,700,480)
-        self.photo_button.setStyleSheet("background-image: url(./assets/take_photo.png); border: none")
+        self.photo_button.setStyleSheet("background-image: url(./assets/take_photo.png); border-right: 1px solid #999999;")
         countdown_screen = lambda: self.window.changeScreen(1)
         self.photo_button.clicked.connect(countdown_screen)
-        self.photo_button.setStyleSheet("border-right: 1px solid #999999;")
 
         self.settings_button = QPushButton("", self)
         self.settings_button.setGeometry(700,380,100,50)
