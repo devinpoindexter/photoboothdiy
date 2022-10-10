@@ -206,7 +206,7 @@ class BlankScreen(QWidget):
         super().__init__()
         self.window = window
         self.blank_label = QLabel("☺", self) #creating blank screen to use as flash
-        self.desc_label.setFont(QFont('Montserrat', 40))
+        self.blank_label.setFont(QFont('Montserrat', 40))
         self.blank_label.setGeometry(0,0,800,480)
         self.setStyleSheet("background-color: white;")
 
