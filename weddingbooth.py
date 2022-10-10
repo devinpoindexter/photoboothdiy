@@ -125,12 +125,14 @@ class HomeScreen(QWidget):
     def __init__(self, window=None):
         super().__init__()        
         self.window = window     
-        
+        self.setStyleSheet("background-color: white;")
+
         self.photo_button = QPushButton("", self)
         self.photo_button.setGeometry(0,0,700,480)
         self.photo_button.setStyleSheet("background-image: url(./assets/take_photo.png); border: none")
         countdown_screen = lambda: self.window.changeScreen(1)
         self.photo_button.clicked.connect(countdown_screen)
+        self.setStyleSheet("border-right: 1px solid #999999;")
 
         self.settings_button = QPushButton("", self)
         self.settings_button.setGeometry(700,380,100,50)
@@ -206,7 +208,7 @@ class BlankScreen(QWidget):
         super().__init__()
         self.window = window
         self.blank_label = QLabel("☺", self) #creating blank screen to use as flash
-        self.blank_label.setFont(QFont('Montserrat', 40))
+        self.blank_label.setFont(QFont('Montserrat', 100))
         self.blank_label.setGeometry(0,0,800,480)
         self.blank_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
