@@ -136,14 +136,14 @@ class HomeScreen(QWidget):
         self.photo_button.clicked.connect(countdown_screen)
 
         self.settings_button = QPushButton("", self)
-        self.settings_button.setGeometry(700,380,100,50)
+        self.settings_button.setGeometry(700,430,100,50)
         self.settings_button.setStyleSheet("background-image: url(./assets/settings_button.png); border: none")
         settings_screen = lambda: self.window.changeScreen(4)
         self.settings_button.clicked.connect(settings_screen)
 
         self.burst_options = [1,3,5]
         self.burst_button = QPushButton("", self)
-        self.burst_button.setGeometry(700,0,100,100)
+        self.burst_button.setGeometry(700,20,100,100)
         self.burst_button.setStyleSheet("background-image: url(./assets/burst_1.png); border: none")
         self.burst_button.clicked.connect(self.changeBurst)
     
