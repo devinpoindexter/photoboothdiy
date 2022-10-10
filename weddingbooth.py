@@ -45,6 +45,8 @@ class Window(QMainWindow):
         self.setGeometry(0, 0, 800, 480) #FLAG change to (0,0,800,480)
         self.createStack()
         QGuiApplication.inputMethod().visibleChanged.connect(self.keyboardMask) # make sure keyboard doesn't block app
+        self.setStyleSheet("background-color: white;")
+
 
         self.countdown_length = 3
         self.burst_count = 1
@@ -132,7 +134,7 @@ class HomeScreen(QWidget):
         self.photo_button.setStyleSheet("background-image: url(./assets/take_photo.png); border: none")
         countdown_screen = lambda: self.window.changeScreen(1)
         self.photo_button.clicked.connect(countdown_screen)
-        self.setStyleSheet("border-right: 1px solid #999999;")
+        self.photo_button.setStyleSheet("border-right: 1px solid #999999;")
 
         self.settings_button = QPushButton("", self)
         self.settings_button.setGeometry(700,380,100,50)
@@ -208,7 +210,7 @@ class BlankScreen(QWidget):
         super().__init__()
         self.window = window
         self.blank_label = QLabel("☺", self) #creating blank screen to use as flash
-        self.blank_label.setFont(QFont('Montserrat', 100))
+        self.blank_label.setFont(QFont('Montserrat', 150))
         self.blank_label.setGeometry(0,0,800,480)
         self.blank_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
