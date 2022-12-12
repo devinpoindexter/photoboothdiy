@@ -95,6 +95,7 @@ class Window(QMainWindow):
         self.camera.brightness            = 50
         self.camera.preview_alpha = 120
         self.camera.preview_fullscreen = True
+        self.camera.framerate_range = (5,30)
         #self.camera.framerate             = 24
         #self.camera.sharpness             = 0
         #self.camera.contrast              = 8
@@ -290,7 +291,7 @@ class EmailScreen(QWidget):
 
         self.send_button = QPushButton("Send", self)
         self.send_button.setGeometry(610,81,190,70)
-        self.send_button.setFont(QFont('Montserrat', 50))
+        self.send_button.setFont(QFont('Montserrat', 30))
         self.send_button.setStyleSheet("background:#0b5394; border-radius: 5px; color: #ffffff;")
         self.send_button.clicked.connect(self.processEmail)
 
@@ -317,6 +318,7 @@ class EmailScreen(QWidget):
 
     def processEmail(self):
         self.send_button.setEnabled(False)
+        self.send_button.setStyleSheet("background:#AAAAAA; border-radius: 5px; color: #ffffff;")
         self.loading_label.setText("Sending, please wait...")
         self.recipient_email = self.email_input.text()
         self.email_delay.start(500)
