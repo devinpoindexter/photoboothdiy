@@ -96,6 +96,7 @@ class Window(QMainWindow):
         self.camera.preview_alpha = 120
         self.camera.preview_fullscreen = True
         self.camera.framerate_range = (5,30)
+        self.camera.exposure_mode = 'spotlight'
         #self.camera.framerate             = 24
         #self.camera.sharpness             = 0
         #self.camera.contrast              = 8
