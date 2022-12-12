@@ -223,6 +223,7 @@ class BlankScreen(QWidget):
 
     def take_photo(self):
         self.photo_delay.stop()
+        self.window.camera.start_preview()
         count = 1
         self.window.photo_paths.clear()
         try:
@@ -235,6 +236,7 @@ class BlankScreen(QWidget):
                     filepath = folderpath + now.strftime(f'%H-%M-%S_{count}.jpg')
 
                     self.window.camera.capture(filepath)
+                    self.window.camera.stop_preview()
                     self.window.photo_paths.append(filepath)
                 finally:
                     logging.info(f'took photo {filepath}')
@@ -247,6 +249,7 @@ class BlankScreen(QWidget):
                     loop.exec_()
         except Exception as e:
             pass
+
         self.window.camera.close()
         self.window.changeScreen(3)
 
