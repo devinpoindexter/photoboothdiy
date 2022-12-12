@@ -223,7 +223,7 @@ class BlankScreen(QWidget):
 
     def take_photo(self):
         self.photo_delay.stop()
-        self.window.camera.start_preview()
+        self.window.camera.start_preview(fullscreen=True,alpha=255)
         count = 1
         self.window.photo_paths.clear()
         try:
