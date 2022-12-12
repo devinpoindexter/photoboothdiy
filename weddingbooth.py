@@ -176,7 +176,7 @@ class CountdownScreen(QWidget):
         self.window = window
         self.countdown_label = QLabel("", self)
         self.countdown_label.setGeometry(0,0,800,480)
-        self.countdown_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        #self.countdown_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.countdown_label.setFont(QFont('Montserrat', 100))
         self.countdown_timer = QTimer()
         self.countdown_timer.timeout.connect(self.countdown_end)
@@ -189,6 +189,7 @@ class CountdownScreen(QWidget):
         
 
     def countdown_start(self):
+        self.window.camera.start_preview(fullscreen=True,alpha=255)
         self.countdown_label.setText(str(self.seconds))
         self.countdown_timer.start(500) #Add half second padding to give pi time to update screen
 
@@ -223,7 +224,7 @@ class BlankScreen(QWidget):
 
     def take_photo(self):
         self.photo_delay.stop()
-        self.window.camera.start_preview(fullscreen=True,alpha=255)
+        
         count = 1
         self.window.photo_paths.clear()
         try:
@@ -240,6 +241,7 @@ class BlankScreen(QWidget):
                     self.window.photo_paths.append(filepath)
                 finally:
                     logging.info(f'took photo {filepath}')
+                    
 
                 count += 1
                 
@@ -247,6 +249,8 @@ class BlankScreen(QWidget):
                     loop = QEventLoop()
                     QTimer.singleShot(1000, loop.quit)
                     loop.exec_()
+                    self.window.camera.stop_preview() #Just in case... don't want multiple activer overlays
+                    self.window.camera.start_preview(fullscreen=True,alpha=255)
         except Exception as e:
             pass
 
