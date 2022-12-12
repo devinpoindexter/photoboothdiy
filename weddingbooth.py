@@ -268,12 +268,12 @@ class EmailScreen(QWidget):
         self.desc_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.email_label = QLabel("Email:", self)
-        self.email_label.setGeometry(0,51,100,100)
+        self.email_label.setGeometry(0,81,100,70)
         self.email_label.setFont(QFont('Montserrat', 25))
         self.email_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.email_input = QLineEdit(self)
-        self.email_input.setGeometry(100,51,500,100)
+        self.email_input.setGeometry(100,81,500,70)
         self.email_input.setFont(QFont('Montserrat', 30))
         self.email_input.setFocus()
 
@@ -289,7 +289,9 @@ class EmailScreen(QWidget):
         self.success_icon.setStyleSheet("color: green")
 
         self.send_button = QPushButton("Send", self)
-        self.send_button.setGeometry(610,51,190,100)
+        self.send_button.setGeometry(610,81,190,70)
+        self.send_button.setFont(QFont('Montserrat', 50))
+        self.send_button.setStyleSheet("background:#0b5394; border-radius: 5px; color: #ffffff;")
         self.send_button.clicked.connect(self.processEmail)
 
         self.back_button = QPushButton("⬅ Back | Retake", self)
@@ -419,8 +421,6 @@ sys.exit(app.exec())
 
 ### PRIORITIES ###
 # make sure we can even focus the camera correctly :)
-# Show photo preview before and after taking
-# Instead of blank screen, show preview and animation between photos
 # Make Photo Graphic on home screen flash different colors
 
 ### IDEAS ###
