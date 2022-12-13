@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import sys, os, time, configparser, logging
 import PIL
 import smtplib
