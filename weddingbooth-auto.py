@@ -19,7 +19,7 @@ os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
 
 config = configparser.ConfigParser()
 config.optionxform = str
-config.read('./photboothdiy/config.ini')
+config.read('home/pi/photboothdiy/config.ini')
 email_address = str(config["DEFAULT"]["SENDER-GMAIL-ADDRESS"])
 email_password = str(config["DEFAULT"]["SENDER-GMAIL-PASSWORD"])
 email_subject = str(config["DEFAULT"]["EMAIL-SUBJECT"])
@@ -133,39 +133,39 @@ class HomeScreen(QWidget):
 
         self.photo_button = QPushButton("", self)
         self.photo_button.setGeometry(0,0,700,480)
-        self.photo_button.setStyleSheet("background-image: url(./photoboothdiy/assets/take_photo.png); border-right: 1px solid #999999;")
+        self.photo_button.setStyleSheet("background-image: url(home/pi/photoboothdiy/assets/take_photo.png); border-right: 1px solid #999999;")
         countdown_screen = lambda: self.window.changeScreen(1)
         self.photo_button.clicked.connect(countdown_screen)
 
         self.settings_button = QPushButton("", self)
         self.settings_button.setGeometry(700,430,100,50)
-        self.settings_button.setStyleSheet("background-image: url(./photoboothdiy/assets/settings_button.png); border: none")
+        self.settings_button.setStyleSheet("background-image: url(home/pi/photoboothdiy/assets/settings_button.png); border: none")
         settings_screen = lambda: self.window.changeScreen(4)
         self.settings_button.clicked.connect(settings_screen)
 
         self.burst_options = [1,3,5]
         self.burst_button = QPushButton("", self)
         self.burst_button.setGeometry(700,20,100,100)
-        self.burst_button.setStyleSheet("background-image: url(./photoboothdiy/assets/burst_1.png); border: none")
+        self.burst_button.setStyleSheet("background-image: url(home/pi/photoboothdiy/assets/burst_1.png); border: none")
         self.burst_button.clicked.connect(self.changeBurst)
     
         self.timer_options = [3,5,7]
         self.timer_button = QPushButton("", self)
         self.timer_button.setGeometry(700,150,100,100)
-        self.timer_button.setStyleSheet("background-image: url(./photoboothdiy/assets/countdown_3.png); border: none") #FLAG Update
+        self.timer_button.setStyleSheet("background-image: url(home/pi/photoboothdiy/assets/countdown_3.png); border: none") #FLAG Update
         self.timer_button.clicked.connect(self.changeTimer)
 
     def changeBurst(self):
         self.burst_options.append(self.burst_options.pop(0)) #Cycle current value to end of loop
         new_count = self.burst_options[0]
         self.window.burst_count = new_count # Set count to new value
-        self.burst_button.setStyleSheet(f'background-image: url(./photoboothdiy/assets/burst_{new_count}.png); border: none')
+        self.burst_button.setStyleSheet(f'background-image: url(home/pi/photoboothdiy/assets/burst_{new_count}.png); border: none')
         
     def changeTimer(self):
         self.timer_options.append(self.timer_options.pop(0)) #Cycle current value to end of loop
         new_length = self.timer_options[0]
         self.window.countdown_length = new_length # Set count to new value
-        self.timer_button.setStyleSheet(f'background-image: url(./photoboothdiy/assets/countdown_{new_length}.png); border: none')
+        self.timer_button.setStyleSheet(f'background-image: url(home/pi/photoboothdiy/assets/countdown_{new_length}.png); border: none')
 
 
     def widgetSelected(self): #Called on each screen when that screen becomes active.
