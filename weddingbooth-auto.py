@@ -19,7 +19,7 @@ os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
 
 config = configparser.ConfigParser()
 config.optionxform = str
-config.read('photboothdiy/config.ini')
+config.read('./photboothdiy/config.ini')
 email_address = str(config["DEFAULT"]["SENDER-GMAIL-ADDRESS"])
 email_password = str(config["DEFAULT"]["SENDER-GMAIL-PASSWORD"])
 email_subject = str(config["DEFAULT"]["EMAIL-SUBJECT"])
