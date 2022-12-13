@@ -16,7 +16,8 @@ from threading import Thread
 ### Defaults and globals
 #####################################################################
 os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
-os.chdir('photboothdiy/')
+path = str(os.getcwd()) + "/photoboothdiy"
+os.chdir('path')
 config = configparser.ConfigParser()
 config.optionxform = str
 config.read('config.ini')
