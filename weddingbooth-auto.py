@@ -358,7 +358,7 @@ class EmailScreen(QWidget):
         except Exception as e:
             print(e)
             print(self.recipient_email)
-            self.loading_label.setText("Uh oh! We're having trouble connecting, your host will have your photos after the event.")
+            self.loading_label.setText("No connection, your host will have your photos after the event.")
         
         else:
             self.loading_label.setText("Email Sent! (Please check your spam folder if you don't receive it)")
